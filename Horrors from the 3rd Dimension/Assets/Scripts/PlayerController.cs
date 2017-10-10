@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
+    private Vector3 reflected;
     private Rigidbody rb;
     private float spin;
     private Vector3 translate = new Vector3(0.0f, 0.0f, 0.0f);
@@ -32,35 +33,60 @@ public class PlayerController : MonoBehaviour {
         torque = (1 / (1 - spinDrag) - 1) * spinSpeed;
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        //calculates angle between player and the object they are colliding with
+
+        float cornerAngle = 90;
+
+        reflected = Vector3.Reflect(transform.forward, collision.contacts[0].normal);
+        float collisionAngle = Mathf.Acos(Vector3.Dot(reflected,transform.forward)/reflected.magnitude/transform.forward.magnitude);
+        if (collisionAngle > Mathf.PI/2)
+        {
+            collisionAngle -= Mathf.PI;
+            collisionAngle *= -1;
+        }//gets angle between surface and center of object with vertex at the collision point in radians.
+
+        Vector3 normal = Vector3.Reflect(rb.velocity,collision.contacts[0].normal) - rb.velocity;
+        normal = normal.normalized;
+        
+        collisionAngle /= Mathf.PI;
+        collisionAngle *= (180 - cornerAngle);//converts to degrees and finds angle between the two surfaces.
+
+        float speed = Mathf.Abs(Vector3.Dot(normal,collision.relativeVelocity));//gets relative speed between two objects
+        print(collisionAngle * speed);//this could be the damage output.
+    }
+
     // Update is called once per frame
     void Update () {
-        checkInput();
-        applyDrag();
-        moveObject();
-        rotateObject();
-        keepObjectOnPlane();
+        
+        CheckInput();
+        ApplyDrag();
+        MoveObject();
+        RotateObject();
+        KeepObjectOnPlane();
 
         BoxCollider b = this.GetComponent<BoxCollider>();//not used yet
     }
 
-    void applyDrag()
+    void ApplyDrag()
     {
         translate *= (1 - drag);
         spin *= (1 - spinDrag);
     }
 
-    void keepObjectOnPlane()
+    void KeepObjectOnPlane()
     {
         transform.position = (new Vector3(transform.position.x, 0, transform.position.z));//keeps player on plane
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);//keeps x and z rotation 0
     }
 
-    void rotateObject()
+    void RotateObject()
     {
         rb.angularVelocity = new Vector3(0, spin / Time.deltaTime, 0);//controls rotation
     }
 
-    void moveObject()
+    void MoveObject()
     {
         if (!dirMovement)
         {
@@ -68,11 +94,11 @@ public class PlayerController : MonoBehaviour {
         }
         else
         {
-            convertMotion();//changes the up/down motion into motion relative to the object itself, then applies it
+            ConvertMotion();//changes the up/down motion into motion relative to the object itself, then applies it
         }
     }
 
-    void convertMotion()
+    void ConvertMotion()
     {
         float angle = transform.eulerAngles.y;
         angle = angle / 180 * Mathf.PI;
@@ -83,14 +109,14 @@ public class PlayerController : MonoBehaviour {
         rb.velocity = move*translate[2]/Time.deltaTime;
     }
 
-    void checkInput()
+    void CheckInput()
     {
-        moveX();
-        moveZ();
-        rotate();
+        MoveX();
+        MoveZ();
+        Rotate();
     }
 
-    void moveX()
+    void MoveX()
     {
         if (!dirMovement)
         {
@@ -119,7 +145,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    void moveZ()
+    void MoveZ()
     {
         if (Input.GetKey(KeyCode.W))
         {
@@ -145,7 +171,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    void rotate()
+    void Rotate()
     {
         if (!dirMovement)
         {
