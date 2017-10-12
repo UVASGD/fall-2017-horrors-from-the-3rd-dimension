@@ -8,6 +8,7 @@ public class EnemyMover : MonoBehaviour {
     private Rigidbody rb;
     private Vector3 translate = new Vector3();
     private Vector3 direction = new Vector3();
+    private GameObject player;
     private float force;
     private float targetAngle;
 
@@ -19,6 +20,7 @@ public class EnemyMover : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         rb = GetComponent<Rigidbody>();
+        player = GameObject.Find("Player");
         force = (1 / (1 - drag) - 1) * maxSpeed;
     }
 	
@@ -33,7 +35,7 @@ public class EnemyMover : MonoBehaviour {
 
     void locateTarget()
     {
-        direction = GameObject.Find("Player").transform.position - transform.position;
+        direction = player.transform.position - transform.position;
         direction.Normalize();
         targetAngle = Mathf.Acos(direction[0]);//in radians
         if (direction[2] < 0)
