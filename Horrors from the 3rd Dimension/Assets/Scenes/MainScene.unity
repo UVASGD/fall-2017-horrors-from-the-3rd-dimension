@@ -123,7 +123,7 @@ GameObject:
   - component: {fileID: 470431331}
   m_Layer: 0
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Damageable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -139,6 +139,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d70b25ebeffca5043874ef70a67e1df2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 10000
   cornerPos: 45
   numCorners: 4
   maxSpeed: 0.01
@@ -366,7 +367,7 @@ GameObject:
   - component: {fileID: 1276834084}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -461,6 +462,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 198814b17ac425040b9d5766829ec2f1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 0
+  startHealth: 0
   spinDrag: 0.5
   spinSpeed: 0.075
   maxSpeed: 0.1

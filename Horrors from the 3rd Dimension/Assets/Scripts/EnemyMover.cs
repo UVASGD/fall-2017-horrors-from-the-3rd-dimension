@@ -11,7 +11,7 @@ public class EnemyMover : MonoBehaviour {
     private GameObject player;
     private float force;
     private float targetAngle;
-
+    public float health = 10000.0f;
     public float cornerPos;
     public int numCorners;
     public float maxSpeed;
@@ -23,9 +23,38 @@ public class EnemyMover : MonoBehaviour {
         player = GameObject.Find("Player");
         force = (1 / (1 - drag) - 1) * maxSpeed;
     }
-	
-	// Update is called once per frame
-	void Update () {
+    void OnCollisionEnter(Collision collision)
+    {
+        GameObject hitObject = collision.collider.gameObject;
+        if (!hitObject.CompareTag("Player"))
+        {
+            return;
+        }
+        //calculates angle between player and the object they are colliding with
+
+        float cornerAngle = 90;
+
+        Vector3 reflected = Vector3.Reflect(transform.forward, collision.contacts[0].normal);
+        float collisionAngle = Mathf.Acos(Vector3.Dot(reflected, transform.forward) / reflected.magnitude / transform.forward.magnitude);
+        if (collisionAngle > Mathf.PI / 2)
+        {
+            collisionAngle -= Mathf.PI;
+            collisionAngle *= -1;
+        }//gets angle between surface and center of object with vertex at the collision point in radians.
+
+        Vector3 normal = Vector3.Reflect(rb.velocity, collision.contacts[0].normal) - rb.velocity;
+        normal = normal.normalized;
+
+        collisionAngle /= Mathf.PI;
+        collisionAngle *= (180 - cornerAngle);//converts to degrees and finds angle between the two surfaces.
+
+        float speed = Mathf.Abs(Vector3.Dot(normal, collision.relativeVelocity));//gets relative speed between two objects
+        (hitObject.GetComponent<PlayerController>()).health -= collisionAngle * speed;
+        print(hitObject.GetComponent<PlayerController>().health);
+    }
+
+    // Update is called once per frame
+    void Update () {
         locateTarget();
         moveObject();
         rotateObject();

@@ -9,7 +9,9 @@ public class PlayerController : MonoBehaviour {
     private Vector3 translate = new Vector3(0.0f, 0.0f, 0.0f);
     private float force;
     private float torque;
+    public float health = 1000.0f;
 
+    public float startHealth;
     public float spinDrag;
     public float spinSpeed;
     public float maxSpeed;
@@ -28,13 +30,18 @@ public class PlayerController : MonoBehaviour {
         {
             drag -= 0.00001f;
         }
-
+        health = startHealth;
         force = (1 / (1 - drag) - 1) * maxSpeed;
         torque = (1 / (1 - spinDrag) - 1) * spinSpeed;
     }
 
     void OnCollisionEnter(Collision collision)
     {
+        GameObject hitObject = collision.collider.gameObject;
+        if (!hitObject.CompareTag("Damageable"))
+        {
+            return;
+        }
         //calculates angle between player and the object they are colliding with
 
         float cornerAngle = 90;
@@ -54,7 +61,8 @@ public class PlayerController : MonoBehaviour {
         collisionAngle *= (180 - cornerAngle);//converts to degrees and finds angle between the two surfaces.
 
         float speed = Mathf.Abs(Vector3.Dot(normal,collision.relativeVelocity));//gets relative speed between two objects
-        print(collisionAngle * speed);//this could be the damage output.
+        (hitObject.GetComponent<EnemyMover>()).health -= collisionAngle * speed;
+       // print(hitObject.GetComponent<EnemyMover>().health);
     }
 
     // Update is called once per frame
