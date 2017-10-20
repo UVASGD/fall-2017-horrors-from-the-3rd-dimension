@@ -74,8 +74,6 @@ public class PlayerController : MonoBehaviour {
         MoveObject();
         RotateObject();
         KeepObjectOnPlane();
-
-        BoxCollider b = this.GetComponent<BoxCollider>();//not used yet
     }
 
     void ApplyDrag()
