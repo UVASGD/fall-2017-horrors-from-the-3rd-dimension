@@ -50,7 +50,17 @@ public class EnemyMover : MonoBehaviour {
 
         float speed = Mathf.Abs(Vector3.Dot(normal, collision.relativeVelocity));//gets relative speed between two objects
         (hitObject.GetComponent<PlayerController>()).health -= collisionAngle * speed;
-        print(hitObject.GetComponent<PlayerController>().health);
+        ((HealthBar)hitObject.GetComponentInChildren<HealthBar>()).UpdateHealth();
+    }
+
+    public void RecieveDamage(float damage)
+    {
+        health -= damage;
+        print(health);
+        if (health < 0)
+        {
+            Destroy(this.gameObject);
+        }
     }
 
     // Update is called once per frame

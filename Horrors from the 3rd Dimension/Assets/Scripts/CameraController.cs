@@ -7,7 +7,6 @@ public class CameraController : MonoBehaviour {
     //Public Variables for easy edit from Unity
     public GameObject player;
 
-
     private Vector3 offset;
 
 	// Use this for initialization
