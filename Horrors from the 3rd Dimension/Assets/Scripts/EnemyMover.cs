@@ -11,7 +11,9 @@ public class EnemyMover : MonoBehaviour {
     private GameObject player;
     private float force;
     private float targetAngle;
-	public float maxHealth = 10000.0f;
+    private float distanceToPlayer;
+
+	public float maxHealth = 500.0f;
 	public float health;
     public float cornerPos;
     public int numCorners;
@@ -78,8 +80,11 @@ public class EnemyMover : MonoBehaviour {
     // Update is called once per frame
     void Update () {
         locateTarget();
-        moveObject();
-        rotateObject();
+        if (distanceToPlayer < 10)
+        {
+            moveObject();
+            rotateObject();
+        }
         applyDrag();
         keepObjectOnPlane();
 
@@ -91,6 +96,7 @@ public class EnemyMover : MonoBehaviour {
     void locateTarget()
     {
         direction = player.transform.position - transform.position;
+        distanceToPlayer = direction.magnitude;
         direction.Normalize();
         targetAngle = Mathf.Acos(direction[0]);//in radians
         if (direction[2] < 0)
@@ -100,12 +106,16 @@ public class EnemyMover : MonoBehaviour {
         }
         targetAngle /= Mathf.PI / 180;
         targetAngle = 360 - targetAngle;
+        if (distanceToPlayer > 2)
+        {
+            targetAngle += 45;
+        }
         //print(targetAngle);
     }
 
     void rotateObject()
     {
-        rb.angularVelocity = new Vector3(0, 0.005f * findMinDif() / Time.deltaTime, 0);//controls rotation
+        rb.angularVelocity = new Vector3(0, 0.001f * findMinDif() / Time.deltaTime, 0);//controls rotation
     }
 
     float findMinDif()//this mess should work for any shape with evenly spaced corners
