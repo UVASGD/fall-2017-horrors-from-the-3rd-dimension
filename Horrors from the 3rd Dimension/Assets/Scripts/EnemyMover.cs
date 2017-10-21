@@ -11,17 +11,22 @@ public class EnemyMover : MonoBehaviour {
     private GameObject player;
     private float force;
     private float targetAngle;
-    public float health = 10000.0f;
+	public float maxHealth = 10000.0f;
+	public float health;
     public float cornerPos;
     public int numCorners;
     public float maxSpeed;
     public float drag;
+
+	ParticleSystem bloodTrail;
     
 	// Use this for initialization
 	void Start () {
+		health = maxHealth;
         rb = GetComponent<Rigidbody>();
         player = GameObject.Find("Player");
         force = (1 / (1 - drag) - 1) * maxSpeed;
+		bloodTrail = GetComponentInChildren<ParticleSystem> ();
     }
     void OnCollisionEnter(Collision collision)
     {
@@ -59,8 +64,14 @@ public class EnemyMover : MonoBehaviour {
         print(health);
         if (health < 0)
         {
+			bloodTrail.startSize = 10;
+			bloodTrail.Emit (2);
             Destroy(this.gameObject);
         }
+
+		//ParticleSystem.MinMaxCurve size = new ParticleSystem.MinMaxCurve (;
+
+		bloodTrail.startSize = (maxHealth / health) / 10000;
     }
 
     // Update is called once per frame
@@ -70,6 +81,10 @@ public class EnemyMover : MonoBehaviour {
         rotateObject();
         applyDrag();
         keepObjectOnPlane();
+
+		if (health < 10000) {
+			bloodTrail.Emit (1);
+		}
 	}
 
     void locateTarget()
