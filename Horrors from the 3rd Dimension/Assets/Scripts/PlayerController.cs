@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour {
     public float drag; //set drag to 1 for minimal acceleration, 0 for most acceleration
     public bool dirMovement;
     
+	ParticleSystem bloodTrail;
+
     void Start () {
         health = maxHealth;
         rb = GetComponent<Rigidbody>();
@@ -32,7 +34,8 @@ public class PlayerController : MonoBehaviour {
             drag -= 0.00001f;
         }
         force = (1 / (1 - drag) - 1) * maxSpeed;
-        torque = (1 / (1 - spinDrag) - 1) * spinSpeed;
+		torque = (1 / (1 - spinDrag) - 1) * spinSpeed;
+		bloodTrail = GetComponentInChildren<ParticleSystem> ();
     }
 
     void OnCollisionEnter(Collision collision)
@@ -64,6 +67,9 @@ public class PlayerController : MonoBehaviour {
         //(hitObject.GetComponent<EnemyMover>()).health -= collisionAngle * speed;
         // print(hitObject.GetComponent<EnemyMover>().health);
         ((EnemyMover)hitObject.GetComponentInParent<EnemyMover>()).RecieveDamage(collisionAngle * speed);
+
+
+		bloodTrail.startSize = (maxHealth / health) / 10000;
     }
 
     // Update is called once per frame
@@ -74,6 +80,17 @@ public class PlayerController : MonoBehaviour {
         MoveObject();
         RotateObject();
         KeepObjectOnPlane();
+
+		if (health < maxHealth) {
+			bloodTrail.Emit (1);
+			if (health < 0) 
+			{
+				bloodTrail.startSize = 1000;
+				bloodTrail.Emit (2);
+				bloodTrail.transform.parent = this.transform.parent;
+				Destroy(this.gameObject);
+			}
+		}
     }
 
     void ApplyDrag()

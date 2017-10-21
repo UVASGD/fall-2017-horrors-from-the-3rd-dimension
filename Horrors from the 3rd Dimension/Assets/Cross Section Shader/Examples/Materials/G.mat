@@ -8,8 +8,8 @@ Material:
   m_PrefabInternal: {fileID: 0}
   m_Name: G
   m_Shader: {fileID: 4800000, guid: dfb2ef60de11e934f9e7571d2eb7bf08, type: 3}
-  m_ShaderKeywords: 
-  m_LightmapFlags: 5
+  m_ShaderKeywords: _EMISSION
+  m_LightmapFlags: 1
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
@@ -74,7 +74,7 @@ Material:
     - _ZWrite: 1
     m_Colors:
     - _Color: {r: 0, g: 0.78431374, b: 0, a: 1}
-    - _CrossColor: {r: 1, g: 1, b: 1, a: 1}
+    - _CrossColor: {r: 0.23605105, g: 0.86764705, b: 0.7892421, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _PlaneNormal: {r: 0, g: 1, b: 0, a: 0}
-    - _PlanePosition: {r: 0, g: 0, b: 0, a: 1}
+    - _PlanePosition: {r: 0, g: 1, b: 0, a: 1}

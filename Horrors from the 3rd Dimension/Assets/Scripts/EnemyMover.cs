@@ -62,10 +62,11 @@ public class EnemyMover : MonoBehaviour {
     {
         health -= damage;
         print(health);
-        if (health < 0)
+        if (health <= 0)
         {
-			bloodTrail.startSize = 10;
+			bloodTrail.startSize = 100;
 			bloodTrail.Emit (2);
+			bloodTrail.transform.parent = this.transform.parent;
             Destroy(this.gameObject);
         }
 
