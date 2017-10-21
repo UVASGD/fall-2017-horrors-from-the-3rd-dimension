@@ -89,7 +89,7 @@ public class EnemyMover : MonoBehaviour {
 
     void rotateObject()
     {
-        rb.angularVelocity = new Vector3(0, 0.0005f * findMinDif() / Time.deltaTime, 0);//controls rotation
+        rb.angularVelocity = new Vector3(0, 0.005f * findMinDif() / Time.deltaTime, 0);//controls rotation
     }
 
     float findMinDif()//this mess should work for any shape with evenly spaced corners
