@@ -1346,7 +1346,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faf99e018357ae540af9857ffe8d1d1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  state: 0
+  state: -1
   savedTime: 0
 --- !u!1 &1186398194
 GameObject:

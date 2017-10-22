@@ -19,7 +19,7 @@ public class Boss3D : MonoBehaviour {
 	{
 		switch (state) {
 		case -1:
-			if (player.transform.position.z > 45 && player.transform.position.z < 75 && player.transform.position.x > 5 && player.transform.position.z < 40) {
+			if (player.transform.position.z > 45 && player.transform.position.z < 75 && player.transform.position.x > 5 && player.transform.position.x < 40) {
 				state = 0;
 			}
 			break;
