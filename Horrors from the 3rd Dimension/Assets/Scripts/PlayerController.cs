@@ -17,6 +17,7 @@ public class PlayerController : MonoBehaviour {
     public float maxSpeed;
     public float drag; //set drag to 1 for minimal acceleration, 0 for most acceleration
     public bool dirMovement;
+    private GameObject obj;
     
 	ParticleSystem bloodTrail;
 
@@ -24,6 +25,7 @@ public class PlayerController : MonoBehaviour {
         health = maxHealth;
         rb = GetComponent<Rigidbody>();
         spin = 0;
+        obj = this.gameObject;
 
         if(spinDrag == 1)//prevents divide by 0 error
         {
@@ -41,6 +43,7 @@ public class PlayerController : MonoBehaviour {
     void OnCollisionEnter(Collision collision)
     {
         GameObject hitObject = collision.collider.gameObject;
+        print("object" + hitObject);
         if (!hitObject.CompareTag("Damageable"))
         {
             return;
@@ -66,10 +69,13 @@ public class PlayerController : MonoBehaviour {
         float speed = Mathf.Abs(Vector3.Dot(normal,collision.relativeVelocity));//gets relative speed between two objects
         //(hitObject.GetComponent<EnemyMover>()).health -= collisionAngle * speed;
         // print(hitObject.GetComponent<EnemyMover>().health);
-        ((EnemyMover)hitObject.GetComponentInParent<EnemyMover>()).RecieveDamage(collisionAngle * speed);
+        if (!float.IsNaN(collisionAngle * speed))
+        {
+            hitObject.GetComponentInParent<EnemyMover>().RecieveDamage(collisionAngle * speed);
+        }
 
 
-		bloodTrail.startSize = (maxHealth / health) / 10000;
+		//bloodTrail.startSize = (maxHealth / health) / 10000;
     }
 
     // Update is called once per frame
@@ -81,14 +87,14 @@ public class PlayerController : MonoBehaviour {
         RotateObject();
         KeepObjectOnPlane();
 
-		if (health < maxHealth) {
+		if (false && health < maxHealth) {
 			bloodTrail.Emit (1);
 			if (health < 0) 
 			{
 				bloodTrail.startSize = 1000;
 				bloodTrail.Emit (2);
 				bloodTrail.transform.parent = this.transform.parent;
-				Destroy(this.gameObject);
+                Destroy(obj);
 			}
 		}
     }

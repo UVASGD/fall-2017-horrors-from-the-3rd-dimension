@@ -63,18 +63,18 @@ public class EnemyMover : MonoBehaviour {
     public void RecieveDamage(float damage)
     {
         health -= damage;
-        print(health);
+        print("health" + health);
         if (health <= 0)
         {
-			bloodTrail.startSize = 100;
-			bloodTrail.Emit (2);
-			bloodTrail.transform.parent = this.transform.parent;
+			//bloodTrail.startSize = 100;
+			//bloodTrail.Emit (2);
+			//bloodTrail.transform.parent = this.transform.parent;
             Destroy(this.gameObject);
         }
 
 		//ParticleSystem.MinMaxCurve size = new ParticleSystem.MinMaxCurve (;
 
-		bloodTrail.startSize = (maxHealth / health) / 10000;
+		//bloodTrail.startSize = (maxHealth / health) / 10000;
     }
 
     // Update is called once per frame
@@ -89,7 +89,7 @@ public class EnemyMover : MonoBehaviour {
         keepObjectOnPlane();
 
 		if (health < 10000) {
-			bloodTrail.Emit (1);
+			//bloodTrail.Emit (1);
 		}
 	}
 
@@ -106,7 +106,7 @@ public class EnemyMover : MonoBehaviour {
         }
         targetAngle /= Mathf.PI / 180;
         targetAngle = 360 - targetAngle;
-        if (distanceToPlayer > 2)
+        if (distanceToPlayer > 4)
         {
             targetAngle += 45;
         }
@@ -115,7 +115,7 @@ public class EnemyMover : MonoBehaviour {
 
     void rotateObject()
     {
-        rb.angularVelocity = new Vector3(0, 0.001f * findMinDif() / Time.deltaTime, 0);//controls rotation
+        rb.angularVelocity = new Vector3(0, 0.005f * findMinDif() / Time.deltaTime, 0);//controls rotation
     }
 
     float findMinDif()//this mess should work for any shape with evenly spaced corners
