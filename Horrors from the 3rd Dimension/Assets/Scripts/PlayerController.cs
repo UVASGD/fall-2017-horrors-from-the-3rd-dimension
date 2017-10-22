@@ -18,6 +18,8 @@ public class PlayerController : MonoBehaviour {
     public float drag; //set drag to 1 for minimal acceleration, 0 for most acceleration
     public bool dirMovement;
     private GameObject obj;
+
+	public bool grounded = true;
     
 	ParticleSystem bloodTrail;
 
@@ -85,9 +87,11 @@ public class PlayerController : MonoBehaviour {
         ApplyDrag();
         MoveObject();
         RotateObject();
-        KeepObjectOnPlane();
+		if (grounded) {
+			KeepObjectOnPlane ();
+		}
 
-		if (false && health < maxHealth) {
+		if (health < maxHealth) {
 			bloodTrail.Emit (1);
 			if (health < 0) 
 			{
@@ -96,6 +100,16 @@ public class PlayerController : MonoBehaviour {
 				bloodTrail.transform.parent = this.transform.parent;
                 Destroy(obj);
 			}
+		}
+
+		ParticleSystem.MinMaxCurve size = bloodTrail.main.startSize;
+		size.constantMin = .1f;
+		size.constantMax = 1-health/maxHealth;
+		ParticleSystem.MainModule m = bloodTrail.main;
+		m.startSize = size;
+
+		if (health < maxHealth - (.05 * maxHealth)) {
+			bloodTrail.Emit (1);
 		}
     }
 
@@ -135,7 +149,7 @@ public class PlayerController : MonoBehaviour {
         angle += Mathf.PI/4;
         angle %= 2 * Mathf.PI;
 
-        Vector3 move = new Vector3(Mathf.Sin(angle),0,Mathf.Cos(angle));
+		Vector3 move = new Vector3(Mathf.Sin(angle),rb.velocity.y,Mathf.Cos(angle));
         rb.velocity = move*translate[2]/Time.deltaTime;
     }
 

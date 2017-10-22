@@ -66,15 +66,18 @@ public class EnemyMover : MonoBehaviour {
         print("health" + health);
         if (health <= 0)
         {
-			//bloodTrail.startSize = 100;
-			//bloodTrail.Emit (2);
-			//bloodTrail.transform.parent = this.transform.parent;
+			bloodTrail.startSize = 100;
+			bloodTrail.Emit (2);
+			bloodTrail.transform.parent = this.transform.parent;
             Destroy(this.gameObject);
         }
 
-		//ParticleSystem.MinMaxCurve size = new ParticleSystem.MinMaxCurve (;
-
 		//bloodTrail.startSize = (maxHealth / health) / 10000;
+		ParticleSystem.MinMaxCurve size = bloodTrail.main.startSize;
+		size.constantMin = .1f;
+		size.constantMax = 1-health/maxHealth;
+		ParticleSystem.MainModule m = bloodTrail.main;
+		m.startSize = size;
     }
 
     // Update is called once per frame
@@ -88,13 +91,17 @@ public class EnemyMover : MonoBehaviour {
         applyDrag();
         keepObjectOnPlane();
 
-		if (health < 10000) {
-			//bloodTrail.Emit (1);
+		if (health < maxHealth - (.05 * maxHealth)) {
+			bloodTrail.Emit (1);
 		}
 	}
 
     void locateTarget()
     {
+		if (player == null) {
+			Application.LoadLevel (Application.loadedLevel);
+		}
+
         direction = player.transform.position - transform.position;
         distanceToPlayer = direction.magnitude;
         direction.Normalize();
