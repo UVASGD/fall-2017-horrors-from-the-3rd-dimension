@@ -87,6 +87,7 @@ public class PlayerController : MonoBehaviour {
         ApplyDrag();
         MoveObject();
         RotateObject();
+
 		if (grounded) {
 			KeepObjectOnPlane ();
 		}
