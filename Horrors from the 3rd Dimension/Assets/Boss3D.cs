@@ -18,7 +18,7 @@ public class Boss3D : MonoBehaviour {
 		cubeFilter = GetComponent<MeshFilter> ();
 		cube = cubeFilter.mesh;
 		Vector3[] vs = cube.vertices;
-		int ts = cube.triangles;
+		int[] ts = cube.triangles;
 		List<Vector3> orderedVerts = new List<Vector3> ();
 		for (int i = 0; i < cube.vertexCount; i++) 
 		{
