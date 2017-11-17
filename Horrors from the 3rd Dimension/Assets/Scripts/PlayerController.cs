@@ -9,6 +9,9 @@ public class PlayerController : MonoBehaviour {
     private Vector3 translate = new Vector3(0.0f, 0.0f, 0.0f);
     private float force;
     private float torque;
+    private IEnumerator coroutine;
+    private GameObject obj;
+    private bool canSpin = true;
 
     public float health = 0.0f;
     public float maxHealth = 1000.0f;
@@ -17,7 +20,6 @@ public class PlayerController : MonoBehaviour {
     public float maxSpeed;
     public float drag; //set drag to 1 for minimal acceleration, 0 for most acceleration
     public bool dirMovement;
-    private GameObject obj;
 
 	public bool grounded = true;
     
@@ -41,13 +43,30 @@ public class PlayerController : MonoBehaviour {
 		torque = (1 / (1 - spinDrag) - 1) * spinSpeed;
 		bloodTrail = GetComponentInChildren<ParticleSystem> ();
     }
+    
+    void OnCollisionExit(Collision collision)
+    {
+        rb.freezeRotation = false;
+        canSpin = true;
+    }
+
+    private void OnCollisionStay(Collision collision)
+    {
+        GameObject hitObject = collision.collider.gameObject;
+        if (hitObject.tag == "Wall")
+        {
+            //rb.angularVelocity = new Vector3(0, 0, 0);
+            //canSpin = false;
+        }
+    }
 
     void OnCollisionEnter(Collision collision)
     {
         GameObject hitObject = collision.collider.gameObject;
-        print("object" + hitObject);
         if (!hitObject.CompareTag("Damageable"))
         {
+            rb.angularVelocity = new Vector3(0,0,0);
+            //rb.freezeRotation = true;
             return;
         }
         //calculates angle between player and the object they are colliding with
@@ -69,20 +88,16 @@ public class PlayerController : MonoBehaviour {
         collisionAngle *= (180 - cornerAngle);//converts to degrees and finds angle between the two surfaces.
 
         float speed = Mathf.Abs(Vector3.Dot(normal,collision.relativeVelocity));//gets relative speed between two objects
-        //(hitObject.GetComponent<EnemyMover>()).health -= collisionAngle * speed;
-        // print(hitObject.GetComponent<EnemyMover>().health);
         if (!float.IsNaN(collisionAngle * speed))
         {
             hitObject.GetComponentInParent<EnemyMover>().RecieveDamage(collisionAngle * speed);
         }
-
 
 		//bloodTrail.startSize = (maxHealth / health) / 10000;
     }
 
     // Update is called once per frame
     void Update () {
-        
         CheckInput();
         ApplyDrag();
         MoveObject();
@@ -127,7 +142,10 @@ public class PlayerController : MonoBehaviour {
 
     void RotateObject()
     {
-        rb.angularVelocity = new Vector3(0, spin / Time.deltaTime, 0);//controls rotation
+        if (canSpin)
+        {
+            rb.angularVelocity = new Vector3(0, spin / Time.deltaTime, 0);//controls rotation
+        }
     }
 
     void MoveObject()
