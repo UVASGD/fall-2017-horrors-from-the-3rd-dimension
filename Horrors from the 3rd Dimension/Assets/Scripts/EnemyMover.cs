@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using System;
 
 //This is rudimentary and will probably not be used because I don't really know what I'm doing but hopefully I learn something.
 
@@ -9,10 +11,17 @@ public class EnemyMover : MonoBehaviour {
     private Vector3 translate = new Vector3();
     private Vector3 direction = new Vector3();
     private GameObject player;
+    private GameObject text;
     private float force;
     private float targetAngle;
     private float distanceToPlayer;
+    private bool inRangeOfPlayer;
+    private int selector;
+    private System.Random r = new System.Random();
+    private string[] foundDialogOptions = new string[] {"Stop right there!", "Hey, get back here!", "Hey you! Get back here!", "I’ll send you to the coroner!", "Finally! Something to do besides wander around! I call dibs on killing ‘im!", "I’ll destroy you all! Oh. There’s just one of you. Still, I’ll destroy ALL of you…"};
+    private string[] escapeDialogOptions = new string[] { "Running away won’t make you any less vulnerable!", "Ugh.. I really need to get back into shape…", "Where’d he go?" };
 
+    public Text dialog;
 	public float maxHealth = 500.0f;
 	public float health;
     public float cornerPos;
@@ -24,9 +33,10 @@ public class EnemyMover : MonoBehaviour {
     
 	// Use this for initialization
 	void Start () {
-		health = maxHealth;
+        health = maxHealth;
         rb = GetComponent<Rigidbody>();
         player = GameObject.Find("Player");
+        text = GameObject.Find("Text");
         force = (1 / (1 - drag) - 1) * maxSpeed;
 		bloodTrail = GetComponentInChildren<ParticleSystem> ();
     }
@@ -85,8 +95,24 @@ public class EnemyMover : MonoBehaviour {
         locateTarget();
         if (distanceToPlayer < 10)
         {
+            if (!inRangeOfPlayer) {
+                dialog = text.GetComponent<Text>();
+                selector = r.Next(0,foundDialogOptions.Length);
+                dialog.text = foundDialogOptions[selector];
+            }
             moveObject();
             rotateObject();
+            inRangeOfPlayer = true;
+        }
+        else
+        {
+            if (inRangeOfPlayer)
+            {
+                dialog = text.GetComponent<Text>();
+                selector = r.Next(0,escapeDialogOptions.Length);
+                dialog.text = escapeDialogOptions[selector];
+            }
+            inRangeOfPlayer = false;
         }
         applyDrag();
         keepObjectOnPlane();

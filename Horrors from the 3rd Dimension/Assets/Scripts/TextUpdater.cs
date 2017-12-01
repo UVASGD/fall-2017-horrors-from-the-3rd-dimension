@@ -1,16 +1,36 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TextUpdater : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-        public Text dialog;
+    private bool clearingText = false;
+    private float textAppliedTime = 0.0f;
+    public Text dialog;
+
+    // Use this for initialization
+    void Start () {
+        dialog = GetComponent<Text>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        dialog.text = "Hey?";
+
+        if (!clearingText && dialog.text != "")
+        {
+            clearingText = true;
+            textAppliedTime = Time.time;
+        }
+        if (Time.time - 5 > textAppliedTime)
+        {
+            clearText();
+            clearingText = false;
+        }
 	}
+
+    public void clearText()
+    {
+        dialog.text = "";
+    }
 }
