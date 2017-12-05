@@ -20,6 +20,7 @@ public class EnemyMover : MonoBehaviour {
     private System.Random r = new System.Random();
     private string[] foundDialogOptions = new string[] {"Stop right there!", "Hey, get back here!", "Hey you! Get back here!", "I’ll send you to the coroner!", "Finally! Something to do besides wander around! I call dibs on killing ‘im!", "I’ll destroy you all! Oh. There’s just one of you. Still, I’ll destroy ALL of you…"};
     private string[] escapeDialogOptions = new string[] { "Running away won’t make you any less vulnerable!", "Ugh.. I really need to get back into shape…", "Where’d he go?" };
+    private string[] dealDamage = new string[] { "Die. Die! DIE!", "Die in pain!", "I'll kill you!"};
 
     public Text dialog;
 	public float maxHealth = 500.0f;
@@ -68,6 +69,12 @@ public class EnemyMover : MonoBehaviour {
         float speed = Mathf.Abs(Vector3.Dot(normal, collision.relativeVelocity));//gets relative speed between two objects
         (hitObject.GetComponent<PlayerController>()).health -= collisionAngle * speed;
         ((HealthBar)hitObject.GetComponentInChildren<HealthBar>()).UpdateHealth();
+        if (collisionAngle * speed > 3)
+        {
+            dialog = text.GetComponent<Text>();
+            selector = r.Next(0, dealDamage.Length);
+            dialog.text = dealDamage[selector];
+        }
     }
 
     public void RecieveDamage(float damage)

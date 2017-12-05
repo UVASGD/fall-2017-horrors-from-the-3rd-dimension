@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class TextUpdater : MonoBehaviour {
 
+    private string pastText = "";
     private bool clearingText = false;
     private float textAppliedTime = 0.0f;
     public Text dialog;
@@ -16,15 +17,15 @@ public class TextUpdater : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-
-        if (!clearingText && dialog.text != "")
+        if (pastText != dialog.text)
         {
-            clearingText = true;
+            pastText = dialog.text;
             textAppliedTime = Time.time;
         }
         if (Time.time - 5 > textAppliedTime)
         {
             clearText();
+            pastText = "";
             clearingText = false;
         }
 	}
