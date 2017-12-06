@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: c4713894d07a6074789f65c9464bd913
+timeCreated: 1512527227
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Courier 10 Pitch
+  fontNames:
+  - Courier 10 Pitch
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
