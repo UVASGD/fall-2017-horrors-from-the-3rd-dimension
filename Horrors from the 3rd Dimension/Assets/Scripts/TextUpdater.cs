@@ -8,6 +8,8 @@ public class TextUpdater : MonoBehaviour {
     private string pastText = "";
     private bool clearingText = false;
     private float textAppliedTime = 0.0f;
+
+    public bool speaker;
     public Text dialog;
 
     // Use this for initialization
